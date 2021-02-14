@@ -30,7 +30,7 @@ class Camera(object):
         image_point = np.delete(image_point, 2)
         return image_point
 
-    def ImageToGroundPlane(self, translation, rotation, pixel_point):
+    def imageToGroundPlane(self, translation, rotation, pixel_point):
         """Converts pixel location to location on ground plane
 
         Args:
@@ -60,11 +60,15 @@ if __name__ == "__main__":
     cm_30 = cam.worldToImage([0, 0, 0.295], [radians(-29-90), 0, 0], [0, 0.34, 0])
     cm_40 = cam.worldToImage([0, 0, 0.295], [radians(-29-90), 0, 0], [0, 0.44, 0])
     cm_50 = cam.worldToImage([0, 0, 0.295], [radians(-29-90), 0, 0], [0, 0.54, 0])
+    cm_40_10 = cam.worldToImage([0, 0, 0.295], [radians(-29-90), 0, 0], [0.1, 0.44, 0])
+    cm_40_10_2 = cam.worldToImage([0, 0, 0.295], [radians(-29-90), 0, 0], [-0.1, 0.44, 0])
 
-    image = cv2.imread(r'C:\Users\20203316\Documents\Projects\line_detection\images\WIN_20210214_19_24_49_Pro.jpg')
+    image = cv2.imread(r'C:\Users\20203316\Documents\Projects\barrier_tape_detection\images\WIN_20210214_19_24_49_Pro.jpg')
     image = cv2.circle(image, (int(cm_30[0]),int(cm_30[1])), radius=4, color=(0, 0, 255), thickness=-1)
     image = cv2.circle(image, (int(cm_40[0]),int(cm_40[1])), radius=4, color=(0, 0, 255), thickness=-1)
     image = cv2.circle(image, (int(cm_50[0]),int(cm_50[1])), radius=4, color=(0, 0, 255), thickness=-1)
+    image = cv2.circle(image, (int(cm_40_10[0]),int(cm_40_10[1])), radius=4, color=(0, 0, 255), thickness=-1)
+    image = cv2.circle(image, (int(cm_40_10_2[0]),int(cm_40_10_2[1])), radius=4, color=(0, 0, 255), thickness=-1)
     cv2.imshow("image", image) 
     cv2.waitKey(0)  
     cv2.destroyAllWindows() 
