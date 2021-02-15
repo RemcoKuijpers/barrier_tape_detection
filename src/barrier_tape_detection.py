@@ -2,7 +2,6 @@ import cv2
 import numpy as np
 from math import radians, sqrt
 from scipy.spatial.transform import Rotation as R
-import time
 
 class Camera(object):
     def __init__(self):
