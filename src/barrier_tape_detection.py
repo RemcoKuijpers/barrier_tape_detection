@@ -47,7 +47,7 @@ class Camera(object):
         pixel_vector = np.array([[pixel_point[0]], [pixel_point[1]], [1]])
         translation_vector = np.array([[translation[0]],  [translation[1]],  [translation[2]]]) # Center of camera wrt world [xc, yc, zc]
         rotation_vector = np.array(rotation) # Rotation of camera wrt world [roll, pitch, yaw]
-        rotation_matrix = R.from_euler('xyz', rotation_vector, degrees=False).as_matrix() # Rotation matrix of camera wrt world
+        rotation_matrix = R.from_euler('xyz', rotation_vector, degrees=False).as_dcm() # Rotation matrix of camera wrt world
         transposed_rotation_matrix = np.transpose(rotation_matrix)
         extrinsic_matrix = np.append(transposed_rotation_matrix, -np.dot(transposed_rotation_matrix, translation_vector), axis=1) # Rotation matrix of world wrt camera
         camera_matrix = np.dot(self.new_intrinsic_matrix, extrinsic_matrix)
@@ -59,7 +59,7 @@ class Camera(object):
         return world_point
 
     def initializeVideoCapture(self):
-        self.cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
+        self.cap = cv2.VideoCapture(0)
         self.cap.set(3, self.resolution[0])
         self.cap.set(4, self.resolution[1])
         self.cap.set(cv2.CAP_PROP_AUTOFOCUS, 0)
@@ -88,7 +88,7 @@ class Camera(object):
         mask = cv2.inRange(hsv, lower_yellow, upper_yellow)
         kernel = np.ones((5, 5), np.uint8)
         mask = cv2.erode(mask, kernel)
-        contours, _ = cv2.findContours(mask, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+        _, contours, _ = cv2.findContours(mask, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
 
         i = 0
         center_points = []
