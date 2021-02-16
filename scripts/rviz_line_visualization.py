@@ -31,7 +31,9 @@ while not rospy.is_shutdown():
     line.header.frame_id = "world"
     line.type = line.ARROW
     line.action = line.ADD
-    line.scale.x = 0.05
+    line.scale.x = 0.01
+    line.scale.y = 0.01
+    line.scale.z = 0.01
     line.pose.orientation.w = 1.0
     line.color.r = 1.0
     line.color.g = 1.0
