@@ -1,14 +1,20 @@
+#!/usr/bin/env python
 import cv2
 import numpy as np
 from math import radians, sqrt
 from scipy.spatial.transform import Rotation as R
+import tf
+from tf.transformations import euler_from_quaternion
+import rospy
 
 class Camera(object):
     def __init__(self):
         self.resolution = (640, 480)
         self.intrinsic_matrix = np.array([[643.336890787299, 0, 303.201848937713],[0, 643.532951456850, 240.391572527453],[0, 0, 1]])
         self.distortion_vector = np.array([0.0791643096656636, -0.518750253004116, -0.00264733385610876, -0.00200184149743238, 1.17271667584054])
+
         self.new_intrinsic_matrix, self.roi = cv2.getOptimalNewCameraMatrix(self.intrinsic_matrix, self.distortion_vector, self.resolution, 1, self.resolution)
+        self.transform_listener = tf.TransformListener()
 
     def worldToImage(self, translation, rotation, world_point):
         """Converts world coordinates to pixel coordinates
@@ -58,11 +64,19 @@ class Camera(object):
         world_point = world_point_scaled/world_point_scaled[2]
         return world_point
 
+    def getPose(self):
+        try:
+            (trans,rot) = self.transform_listener.lookupTransform('world', 'camera', rospy.Time(0))
+            rot = euler_from_quaternion(rot, axes='sxyz')
+            return (trans, rot)
+        except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
+            return None
+
     def initializeVideoCapture(self):
         self.cap = cv2.VideoCapture(0)
         self.cap.set(3, self.resolution[0])
         self.cap.set(4, self.resolution[1])
-        self.cap.set(cv2.CAP_PROP_AUTOFOCUS, 0)
+        self.cap.set(cv2.CAP_PROP_AUTOFOCUS, 0) # Disable autofocus!
         #cv2.namedWindow("Trackbars")
         #cv2.createTrackbar("L-H", "Trackbars", 18, 180, nothing)
         #cv2.createTrackbar("L-S", "Trackbars", 100, 255, nothing)

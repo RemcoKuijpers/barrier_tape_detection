@@ -4,7 +4,6 @@ import rospy
 import rospkg
 from visualization_msgs.msg import Marker
 from geometry_msgs.msg import Point
-from math import radians
 
 rospack = rospkg.RosPack()
 project_path = rospack.get_path('barrier_tape_detection')
@@ -19,9 +18,11 @@ cam.initializeVideoCapture()
 
 while not rospy.is_shutdown():
     line = cam.detectLinePoints()
+
+    (trans, rot) = cam.getPose()
     if line is not None:
-        p1 = cam.imageToGroundPlane([0, 0, 0.295], [radians(-29-90), 0, 0], line[0])
-        p2 = cam.imageToGroundPlane([0, 0, 0.295], [radians(-29-90), 0, 0], line[1])
+        p1 = cam.imageToGroundPlane(trans, rot, line[0])
+        p2 = cam.imageToGroundPlane(trans, rot, line[1])
 
         key = cv2.waitKey(1)
         if key == 27:
