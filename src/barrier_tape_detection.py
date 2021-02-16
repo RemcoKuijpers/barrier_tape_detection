@@ -140,7 +140,8 @@ if __name__ == "__main__":
         if line is not None:
             p1 = cam.imageToGroundPlane([0, 0, 0.295], [radians(-29-90), 0, 0], line[0])
             p2 = cam.imageToGroundPlane([0, 0, 0.295], [radians(-29-90), 0, 0], line[1])
-            print(p1,"\n",p2)
+            print(p1)
+            print(p2)
 
         key = cv2.waitKey(1)
         if key == 27:

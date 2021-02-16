@@ -1,0 +1,10 @@
+<launch>
+    <node type="rviz" name="rviz" pkg="rviz" args="-d $(find barrier_tape_detection)/rviz/config.rviz" />
+
+    <node pkg="tf"
+        type="static_transform_publisher"
+        name="camera_position_broadcaster"
+        args="0 0 0.295 0 0 -2.0769418099 world camera 100" />
+
+    <node pkg="barrier_tape_detection" name="line_visualization" type="rviz_line_visualization.py" output="screen" />
+</launch>
